@@ -1,0 +1,33 @@
+1) Create in a folder with both SSLExtractor.jar and jsoup.jar. 
+2) Execute the following commands, these are extracted from the webpage itself.
+
+Approved Building Plan
+java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor 01 2014 c:/temp/test.html lnkApprovBldgPlan dtgBldgPlan
+
+Approved CD Shelter Plan
+java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor 01 2014 c:/temp/test.html lnkApprovCDShelPlan dtgCDShelterPlan
+
+Approved Structural Plan
+java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor 01 2014 c:/temp/test.html lnkApprovStructPlan dtgStructPlan
+
+Permits to Commence Structural Works Issued
+java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor 01 2014 c:/temp/test.html lnkPermCommBldgWork dtgCommBldgWrk
+--OR--
+java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor 01 2014 c:/temp/test.html
+
+Temporary Occupation Permits (TOP) Issued
+java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor 01 2014 c:/temp/test.html lnkTempOccupPerm dtgTOP
+
+Certificates of Statutory Completion (CSC)
+java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor 01 2014 c:/temp/test.html lnkCSC dtgCSC
+
+********
+To create a loop within the BAT file program, use the following command.
+
+echo off
+
+for /l %%y in (2014, 1, 2015) do (
+for /l %%x in (1, 1, 12) do (
+    java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor %%x %%y c:/temp/test_0%%x_%%y.html lnkCSC dtgCSC
+)
+)
