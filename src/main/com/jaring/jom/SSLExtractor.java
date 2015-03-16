@@ -15,6 +15,7 @@ public class SSLExtractor {
 	private final String FILE_NAME;
 	private final String FILE_EXT;
 	private final int MAX_PAGE=200; //create a buffer limit
+	private final int TIME_OUT= 30000;
 	
 	public SSLExtractor(String month, String year, String fileName, String eventTarget, String _type){
 		
@@ -22,12 +23,21 @@ public class SSLExtractor {
 		this.FILE_EXT = fileName.substring(fileName.indexOf(".")+1);
 		
 		try{
+			
+			Response con_query = Jsoup.connect("https://www.bca.gov.sg/eService/integ_search.aspx")
+					.timeout(TIME_OUT)
+					.method(Method.GET)
+					.execute();
+			Document docConTemp = con_query.parse();
+			String _viewState = docConTemp.getElementById("__VIEWSTATE").attr("value");
+			String _eventValidation = docConTemp.getElementById("__EVENTVALIDATION").attr("value");
+			
 			Response con = Jsoup.connect("https://www.bca.gov.sg/eService/integ_search.aspx")
 					.data("__EVENTTARGET",eventTarget)
 					.data("__EVENTARGUMENT", "")
-					.data("__VIEWSTATE","/wEPDwULLTE4OTcyMDg1NTlkZHxjVeWskxF6vz2kPZIJRpnyyhqr")
-					.data("__EVENTVALIDATION","/wEWBwLcyP7tDwK918TCBwLXkej0AwKh0MbqDQLs0dCqDwLr3JnzDQLu2dPaD82I7EgzdItJ/gV2+Rj4bN56IWNp")
-					.timeout(30000)
+					.data("__VIEWSTATE",_viewState)
+					.data("__EVENTVALIDATION",_eventValidation)
+					.timeout(TIME_OUT)
 					.method(Method.POST)
 					.execute();
 			
@@ -35,8 +45,8 @@ public class SSLExtractor {
 			
 			//Dumb method, but what can i Do.
 			Document doctemp = con.parse();
-			String _viewState = doctemp.getElementById("__VIEWSTATE").attr("value");
-			String _eventValidation = doctemp.getElementById("__EVENTVALIDATION").attr("value");
+			_viewState = doctemp.getElementById("__VIEWSTATE").attr("value");
+			_eventValidation = doctemp.getElementById("__EVENTVALIDATION").attr("value");
 			
 		    Document doc = Jsoup.connect("https://www.bca.gov.sg/eService/ListDetails.aspx")
 				.data("__VIEWSTATE",_viewState)
@@ -45,7 +55,7 @@ public class SSLExtractor {
 				.data("ddlYear",year)
 				.data("btnSearch","Search")
 				.cookies(cookies)
-				.timeout(30000)
+				.timeout(TIME_OUT)
 				.post();
 			
 			Element element = doc.getElementById(_type);
@@ -83,7 +93,7 @@ public class SSLExtractor {
 					.data("__VIEWSTATE",viewState)
 					.data("__EVENTVALIDATION",validationId)
 					.cookies(cookies)
-					.timeout(30000)
+					.timeout(TIME_OUT)
 					.post();
 				
 				Element element = doc.getElementById(_type);
