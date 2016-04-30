@@ -31,3 +31,5 @@ for /l %%x in (1, 1, 12) do (
     java -cp SSLExtractor.jar;jsoup.jar;. com.jaring.jom.SSLExtractor %%x %%y c:/temp/test_0%%x_%%y.html lnkCSC dtgCSC
 )
 )
+
+**OFFICIALLY USED IN PRODUCTION
